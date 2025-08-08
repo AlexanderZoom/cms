@@ -1,0 +1,5 @@
+logs/*
+/application/cache/*
+/application/data/logs/*
+/www/media/*
+!.gitkeep
