@@ -1,5 +1,5 @@
 <?php defined('SYSPATH') or die('No direct script access.');
-
+require_once __DIR__ . '/compat_legacy.php';
 // -- Environment setup --------------------------------------------------------
 
 // Load the core Kohana class
