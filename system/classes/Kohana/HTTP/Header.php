@@ -417,6 +417,7 @@ class Kohana_HTTP_Header extends ArrayObject {
 	 * @return  array
 	 * @since   3.2.0
 	 */
+	#[\ReturnTypeWillChange] 
 	public function exchangeArray($input)
 	{
 		/**
