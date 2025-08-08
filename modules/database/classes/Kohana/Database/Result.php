@@ -1,4 +1,4 @@
-<?php defined('SYSPATH') OR die('No direct script access.');
+﻿<?php defined('SYSPATH') OR die('No direct script access.');
 /**
  * Database result wrapper.  See [Results](/database/results) for usage and examples.
  *
@@ -222,6 +222,7 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	 * @param   int     $offset
 	 * @return  boolean
 	 */
+#[\ReturnTypeWillChange]
 	public function offsetExists($offset)
 	{
 		return ($offset >= 0 AND $offset < $this->_total_rows);
@@ -235,6 +236,7 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	 * @param   int     $offset
 	 * @return  mixed
 	 */
+#[\ReturnTypeWillChange]
 	public function offsetGet($offset)
 	{
 		if ( ! $this->seek($offset))
@@ -336,3 +338,4 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	}
 
 } // End Database_Result
+

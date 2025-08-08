@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Class representing phpQuery objects.
  *
@@ -3009,18 +3009,21 @@ class phpQueryObject
 	/**
    * @access private
 	 */
+#[\ReturnTypeWillChange]
 	public function offsetExists($offset) {
 		return $this->find($offset)->size() > 0;
 	}
 	/**
    * @access private
 	 */
+#[\ReturnTypeWillChange]
 	public function offsetGet($offset) {
 		return $this->find($offset);
 	}
 	/**
    * @access private
 	 */
+#[\ReturnTypeWillChange]
 	public function offsetSet($offset, $value) {
 //		$this->find($offset)->replaceWith($value);
 		$this->find($offset)->html($value);
@@ -3028,6 +3031,7 @@ class phpQueryObject
 	/**
    * @access private
 	 */
+#[\ReturnTypeWillChange]
 	public function offsetUnset($offset) {
 		// empty
 		throw new Exception("Can't do unset, use array interface only for calling queries and replacing HTML.");
@@ -3188,3 +3192,4 @@ class phpQueryObject
 	    }
 	}
 }
+

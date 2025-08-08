@@ -1,4 +1,4 @@
-<?php defined('SYSPATH') OR die('No direct script access.');
+﻿<?php defined('SYSPATH') OR die('No direct script access.');
 /**
  * The Kohana_HTTP_Header class provides an Object-Orientated interface
  * to HTTP headers. This can parse header arrays returned from the
@@ -342,6 +342,7 @@ class Kohana_HTTP_Header extends ArrayObject {
 	 * @return  void
 	 * @since   3.2.0
 	 */
+#[\ReturnTypeWillChange]
 	public function offsetSet($index, $newval, $replace = TRUE)
 	{
 		// Ensure the index is lowercase
@@ -374,6 +375,7 @@ class Kohana_HTTP_Header extends ArrayObject {
 	 * @return  boolean
 	 * @since   3.2.0
 	 */
+#[\ReturnTypeWillChange]
 	public function offsetExists($index)
 	{
 		return parent::offsetExists(strtolower($index));
@@ -387,6 +389,7 @@ class Kohana_HTTP_Header extends ArrayObject {
 	 * @return  void
 	 * @since   3.2.0
 	 */
+#[\ReturnTypeWillChange]
 	public function offsetUnset($index)
 	{
 		return parent::offsetUnset(strtolower($index));
@@ -400,6 +403,7 @@ class Kohana_HTTP_Header extends ArrayObject {
 	 * @return  mixed
 	 * @since   3.2.0
 	 */
+#[\ReturnTypeWillChange]
 	public function offsetGet($index)
 	{
 		return parent::offsetGet(strtolower($index));
@@ -941,3 +945,4 @@ class Kohana_HTTP_Header extends ArrayObject {
 	}
 
 }
+

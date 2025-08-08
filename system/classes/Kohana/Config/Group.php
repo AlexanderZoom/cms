@@ -1,4 +1,4 @@
-<?php defined('SYSPATH') OR die('No direct script access.');
+﻿<?php defined('SYSPATH') OR die('No direct script access.');
 
 /**
  * The group wrapper acts as an interface to all the config directives
@@ -121,6 +121,7 @@ class Kohana_Config_Group extends ArrayObject {
 	 * @param string $key   The key of the config item we're changing
 	 * @param mixed  $value The new array value
 	 */
+#[\ReturnTypeWillChange]
 	public function offsetSet($key, $value)
 	{
 		$this->_parent_instance->_write_config($this->_group_name, $key, $value);
@@ -129,3 +130,4 @@ class Kohana_Config_Group extends ArrayObject {
 	}
 
 }
+
