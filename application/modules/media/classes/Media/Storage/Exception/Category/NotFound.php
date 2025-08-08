@@ -1,0 +1,2 @@
+<?php
+class Media_Storage_Exception_Category_NotFound extends Media_Storage_Exception_Category {}

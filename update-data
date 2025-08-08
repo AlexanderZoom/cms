@@ -1,0 +1,4 @@
+#!/bin/bash
+cd /home/http/cms.local
+git pull /home/git/repo/cms1.0/
+chown -R www-data:www-data ./

@@ -1,0 +1,2 @@
+[2016-10-13 23:10:05]	INFO:	cd /home/http/cms.local/application/data/cron/logs && /bin/tar -czvf rotatelog.log.1.tar.gz rotatelog.log.1
+[2016-10-13 23:10:05]	INFO:	STOP PROCESS

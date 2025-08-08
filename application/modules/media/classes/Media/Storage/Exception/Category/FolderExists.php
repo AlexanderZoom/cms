@@ -1,0 +1,2 @@
+<?php
+class Media_Storage_Exception_Category_FolderExists extends Media_Storage_Exception_Category {}
