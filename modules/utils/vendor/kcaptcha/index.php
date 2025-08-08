@@ -1,15 +1,13 @@
 <?php
+error_reporting(E_ALL);
 
-error_reporting (E_ALL);
-
-include('kcaptcha.php');
+include('../vendor/autoload.php');
 
 session_start();
 
-$captcha = new KCAPTCHA();
+$captcha = new \KCAPTCHA\KCAPTCHA();
+$captcha->captcha();
 
-if($_REQUEST[session_name()]){
-	$_SESSION['captcha_keystring'] = $captcha->getKeyString();
+if ($_REQUEST[session_name()]) {
+    $_SESSION['captcha_keystring'] = $captcha->getKeyString();
 }
-
-?>
