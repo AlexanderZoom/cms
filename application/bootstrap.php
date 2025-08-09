@@ -116,6 +116,8 @@ Kohana::$config->attach(new Config_File_Writer);
 I18n::lang(''); //delete var  main.language
 
 
+
+
 /**
  * Attach the file write to logging. Multiple writers are supported.
  */
@@ -124,11 +126,6 @@ Kohana::$log->attach(new Log_File(Kohana::$config->load('main.logs')));
 
 
 
-
-/**
- * Set the default cookie salt
- */
-Cookie::$salt = Kohana::$config->load('main.cookie_salt');
 
 /**
  * Enable modules. Modules are referenced by a relative or absolute path.
@@ -150,10 +147,13 @@ $modulesList = array(
 	//'media_storage'  => MODPATH.'media_storage',
    
 	);
+
 	
-if (Kohana::$environment == Kohana::DEVELOPMENT){
-    $modulesList['toolbar'] = MODPATH.'devtoolbar';
-}
+///if (Kohana::$environment == Kohana::DEVELOPMENT){
+///    $modulesList['toolbar'] = MODPATH.'devtoolbar';
+///}
+
+
 
 Kohana::modules($modulesList);
 //for load user modules
@@ -161,6 +161,13 @@ $modulesList = Arr::merge($modulesList, Modules::getList4Load());
 Kohana::modules($modulesList);
 
 
+
+
+
+/**
+ * Set the default cookie salt
+ */
+Cookie::$salt = Kohana::$config->load('main.cookie_salt');
 
 
 //include routes file
