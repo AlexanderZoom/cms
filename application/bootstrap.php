@@ -1,174 +1,58 @@
 <?php defined('SYSPATH') or die('No direct script access.');
-require_once __DIR__ . '/compat_legacy.php';
-// -- Environment setup --------------------------------------------------------
 
-// Load the core Kohana class
-require SYSPATH.'classes/Kohana/Core'.EXT;
-
-if (is_file(APPPATH.'classes/Kohana'.EXT))
-{
-	// Application extends the core
-	require APPPATH.'classes/Kohana'.EXT;
-}
-else
-{
-	// Load empty core extension
-	require SYSPATH.'classes/Kohana'.EXT;
-}
-
-/**
- * Set the default time zone.
- *
- * @link http://kohanaframework.org/guide/using.configuration
- * @link http://www.php.net/manual/timezones
- */
-date_default_timezone_set('Europe/Moscow');
-
-/**
- * Set the default locale.
- *
- * @link http://kohanaframework.org/guide/using.configuration
- * @link http://www.php.net/manual/function.setlocale
- */
-setlocale(LC_ALL, 'en_US.utf-8');
-
-/**
- * Enable the Kohana auto-loader.
- *
- * @link http://kohanaframework.org/guide/using.autoloading
- * @link http://www.php.net/manual/function.spl-autoload-register
- */
-spl_autoload_register(array('Kohana', 'auto_load'));
-
-/**
- * Optionally, you can enable a compatibility auto-loader for use with
- * older modules that have not been updated for PSR-0.
- *
- * It is recommended to not enable this unless absolutely necessary.
- */
-//spl_autoload_register(array('Kohana', 'auto_load_lowercase'));
-
-/**
- * Enable the Kohana auto-loader for unserialization.
- *
- * @link http://www.php.net/manual/function.spl-autoload-call
- * @link http://www.php.net/manual/var.configuration#unserialize-callback-func
- */
-ini_set('unserialize_callback_func', 'spl_autoload_call');
-
-/**
- * Set the mb_substitute_character to "none"
- *
- * @link http://www.php.net/manual/function.mb-substitute-character.php
- */
-mb_substitute_character('none');
-
-// -- Configuration and initialization -----------------------------------------
-if (isset($_SERVER['SERVER_PROTOCOL']))
-{
-	// Replace the default protocol.
-	HTTP::$protocol = $_SERVER['SERVER_PROTOCOL'];
-}
-
-/**
- * Set Kohana::$environment if a 'KOHANA_ENV' environment variable has been supplied.
- *
- * Note: If you supply an invalid environment name, a PHP warning will be thrown
- * saying "Couldn't find constant Kohana::<INVALID_ENV_NAME>"
- */
+// Environment
 Kohana::$environment = Kohana::DEVELOPMENT;
-if (isset($_SERVER['KOHANA_ENV']))
-{
-	Kohana::$environment = constant('Kohana::'.strtoupper($_SERVER['KOHANA_ENV']));
+if (isset($_SERVER['KOHANA_ENV'])) {
+    Kohana::$environment = constant('Kohana::'.strtoupper($_SERVER['KOHANA_ENV']));
 }
 //Kohana::$environment = Kohana::PRODUCTION;
-/**
- * Initialize Kohana, setting the default options.
- *
- * The following options are available:
- *
- * - string   base_url    path, and optionally domain, of your application   NULL
- * - string   index_file  name of your index file, usually "index.php"       index.php
- * - string   charset     internal character set used for input and output   utf-8
- * - string   cache_dir   set the internal cache directory                   APPPATH/cache
- * - integer  cache_life  lifetime, in seconds, of items cached              60
- * - boolean  errors      enable or disable error handling                   TRUE
- * - boolean  profile     enable or disable internal profiling               TRUE
- * - boolean  caching     enable or disable internal caching                 FALSE
- * - boolean  expose      set the X-Powered-By header                        FALSE
- */
+
+// Initialize Kohana
 Kohana::init(array(
-	'base_url'   => '/',
+    'base_url'   => '/',
     'index_file' => false,
-    'caching' => false,
-    'expose' => false,
+    'caching'    => false,
+    'expose'     => false,
 ));
 
-/**
- * Attach a file reader to config. Multiple readers are supported.
- */
+// Attach config
 //Kohana::$config->attach(new Config_File);
 Kohana::$config->attach(new Config_File_Writer);
 
-/**
- * Set the default language
- */
-I18n::lang(''); //delete var  main.language
-
-
-
-
-/**
- * Attach the file write to logging. Multiple writers are supported.
- */
-Kohana::$log->attach(new Log_File(Kohana::$config->load('main.logs')));
-
-
-
-
-
-/**
- * Enable modules. Modules are referenced by a relative or absolute path.
- */
+// Enable modules
 $modulesList = array(
-	// 'auth'       => MODPATH.'auth',       // Basic authentication
-	// 'cache'      => MODPATH.'cache',      // Caching with multiple backends
-	// 'codebench'  => MODPATH.'codebench',  // Benchmarking tool
-
-    
-	'database'   => MODPATH.'database',   // Database access
-   'image'      => MODPATH.'image',      // Image manipulation
-	'minion'     => MODPATH.'minion',     // CLI Tasks
-	'orm'        => MODPATH.'orm',        // Object Relationship Mapping
-	// 'unittest'   => MODPATH.'unittest',   // Unit testing
-    'userguide'  => MODPATH.'userguide',  // User guide and API documentation
-    'i18n_plural'   => MODPATH.'i18n_plural',
-	'utils'      => MODPATH.'utils',
-	//'media_storage'  => MODPATH.'media_storage',
-   
-	);
-
-	
-///if (Kohana::$environment == Kohana::DEVELOPMENT){
-///    $modulesList['toolbar'] = MODPATH.'devtoolbar';
-///}
-
-
+    'database'    => MODPATH.'database',
+    'image'       => MODPATH.'image',
+    'minion'      => MODPATH.'minion',
+    'orm'         => MODPATH.'orm',
+    'userguide'   => MODPATH.'userguide',
+    'i18n_plural' => MODPATH.'i18n_plural',
+    'utils'       => MODPATH.'utils',
+);
 
 Kohana::modules($modulesList);
-//for load user modules
 $modulesList = Arr::merge($modulesList, Modules::getList4Load());
 Kohana::modules($modulesList);
 
+// Now safe to touch I18n (module loaded)
+if (class_exists('I18n', false) && method_exists('I18n', 'lang')) {
+    I18n::lang('');
+}
 
+// Load main config group once
+$main = Kohana::$config->load('main');
 
+// Attach logging dir from config
+$logs_dir = is_object($main) ? (string)$main->get('logs', '') : '';
+if ($logs_dir !== '') {
+    Kohana::$log->attach(new Log_File($logs_dir));
+}
 
+// Set cookie salt from config (string only)
+$salt = is_object($main) ? (string)$main->get('cookie_salt', '') : '';
+if ($salt !== '') {
+    Cookie::$salt = $salt;
+}
 
-/**
- * Set the default cookie salt
- */
-Cookie::$salt = Kohana::$config->load('main.cookie_salt');
-
-
-//include routes file
+// Routes
 require APPPATH.'route'.EXT;
