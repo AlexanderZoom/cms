@@ -1,31 +1,41 @@
 <?php
-// Пути к каталогам (относительно этого index.php)
+// --- Path settings (adjust if your structure differs) ---
 $application = '../application';
 $modules     = '../modules';
 $system      = '../system';
 
-// .php
 define('EXT', '.php');
 
-// Разрешаем абсолютные пути
 define('APPPATH', realpath($application).DIRECTORY_SEPARATOR);
 define('MODPATH', realpath($modules).DIRECTORY_SEPARATOR);
 define('SYSPATH', realpath($system).DIRECTORY_SEPARATOR);
 
-// Быстрая диагностика путей (можно удалить после проверки)
 if (!APPPATH || !MODPATH || !SYSPATH) {
     header('Content-Type: text/plain; charset=UTF-8', true, 500);
     echo "Bad paths:\nAPPPATH=".(APPPATH ?: 'FALSE')."\nMODPATH=".(MODPATH ?: 'FALSE')."\nSYSPATH=".(SYSPATH ?: 'FALSE')."\n";
     exit;
 }
 
-// ОБЯЗАТЕЛЬНО: подключаем ядро Kohana до bootstrap
+// --- Load Kohana core (must be before APP bootstrap) ---
 require SYSPATH.'classes/Kohana/Core'.EXT;
 require SYSPATH.'classes/Kohana'.EXT;
 
-// Регистрируем автозагрузчик Kohana
+// --- Register autoloaders ---
 spl_autoload_register(array('Kohana', 'auto_load'));
 spl_autoload_register(array('Kohana', 'auto_load_lowercase'));
 
-// Теперь можно грузить bootstrap приложения
+// --- PHP 8 removed APIs: safe fallbacks ---
+// Kohana 3.x checks magic quotes in Core::init(); define stub to avoid fatal on PHP 8
+if (!function_exists('get_magic_quotes_gpc')) {
+    function get_magic_quotes_gpc() { return 0; }
+}
+
+// Some Kohana views call __() early; ensure a minimal pass-through exists
+if (!function_exists('__')) {
+    function __($string, array $values = null, $lang = null) {
+        return $values ? strtr($string, $values) : $string;
+    }
+}
+
+// --- Load application bootstrap ---
 require APPPATH.'bootstrap'.EXT;

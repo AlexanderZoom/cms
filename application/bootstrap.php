@@ -1,5 +1,12 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
+// Ensure __() exists for error rendering (redundant with index.php, safe if left here)
+if (!function_exists('__')) {
+    function __($string, array $values = null, $lang = null) {
+        return $values ? strtr($string, $values) : $string;
+    }
+}
+
 // Environment
 Kohana::$environment = Kohana::DEVELOPMENT;
 if (isset($_SERVER['KOHANA_ENV'])) {
