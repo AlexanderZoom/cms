@@ -1,8 +1,11 @@
 <?php defined('SYSPATH') OR die('No direct script access.');
 /**
- * Exception handling and logging (PHP 8.x compatible).
+ * Base exception implementation (PHP 8.x compatible).
+ * Kohana naming convention: 
+ *   - system/classes/Kohana/Kohana/Exception.php defines Kohana_Kohana_Exception
+ *   - system/classes/Kohana/Exception.php defines Kohana_Exception extends Kohana_Kohana_Exception
  */
-class Kohana_Exception extends Exception {
+class Kohana_Kohana_Exception extends Exception {
 
     public static $php_errors = array(
         E_ERROR             => 'Fatal Error',
@@ -28,12 +31,12 @@ class Kohana_Exception extends Exception {
 
     public function __toString()
     {
-        return Kohana_Exception::text($this);
+        return self::text($this);
     }
 
     public static function handler(Throwable $e)
     {
-        $response = Kohana_Exception::_handler($e);
+        $response = self::_handler($e);
         echo $response->send_headers()->body();
         exit(1);
     }
@@ -42,14 +45,14 @@ class Kohana_Exception extends Exception {
     {
         try
         {
-            Kohana_Exception::log($e);
-            return Kohana_Exception::response($e);
+            self::log($e);
+            return self::response($e);
         }
         catch (Throwable $e)
         {
             ob_get_level() AND ob_clean();
             header('Content-Type: text/plain; charset='.Kohana::$charset, TRUE, 500);
-            echo Kohana_Exception::text($e);
+            echo self::text($e);
             exit(1);
         }
     }
@@ -58,7 +61,7 @@ class Kohana_Exception extends Exception {
     {
         if (is_object(Kohana::$log))
         {
-            $error = Kohana_Exception::text($e);
+            $error = self::text($e);
             Kohana::$log->add($level, $error, NULL, array('exception' => $e));
             Kohana::$log->write();
         }
@@ -104,9 +107,9 @@ class Kohana_Exception extends Exception {
                         if (isset($frame['params']) AND ! isset($frame['args'])) $frame['args'] = $frame['params'];
                     }
                 }
-                if (isset(Kohana_Exception::$php_errors[$code]))
+                if (isset(self::$php_errors[$code]))
                 {
-                    $code = Kohana_Exception::$php_errors[$code];
+                    $code = self::$php_errors[$code];
                 }
             }
 
@@ -115,11 +118,11 @@ class Kohana_Exception extends Exception {
                 $trace = array_slice($trace, 0, 2);
             }
 
-            $view = View::factory(Kohana_Exception::$error_view, get_defined_vars());
+            $view = View::factory(self::$error_view, get_defined_vars());
 
             $response = Response::factory();
             $response->status(($e instanceof HTTP_Exception) ? $e->getCode() : 500);
-            $response->headers('Content-Type', Kohana_Exception::$error_view_content_type.'; charset='.Kohana::$charset);
+            $response->headers('Content-Type', self::$error_view_content_type.'; charset='.Kohana::$charset);
             $response->body($view->render());
         }
         catch (Throwable $e)
@@ -127,7 +130,7 @@ class Kohana_Exception extends Exception {
             $response = Response::factory();
             $response->status(500);
             $response->headers('Content-Type', 'text/plain');
-            $response->body(Kohana_Exception::text($e));
+            $response->body(self::text($e));
         }
         return $response;
     }
