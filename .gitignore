@@ -1,0 +1,20 @@
+# Project files
+.idea
+nbproject
+*.iml
+out
+gen
+
+# Kohana template
+application/cache/*
+application/logs/*
+application/data/logs/*
+application/data/cron/*
+logs/*
+www/media/*
+# Composer
+/vendor/
+composer.lock
+
+# Coverage reports
+/build/logs/

@@ -1,0 +1,15 @@
+<?php defined('SYSPATH') OR die('No direct script access.'); ?>
+<style>
+<!--
+.wrapper         {width:80%;height:100%;margin:0 auto;background:#CCC}
+.h_iframe        {position:relative;}
+.h_iframe .ratio {display:block;width:100%;height:auto;}
+.h_iframe iframe {position:absolute;top:0;left:0;width:100%; height:100%;}
+-->
+</style>
+ <div class="h_iframe">
+        <!-- a transparent image is preferable -->
+        <img class="ratio" src="/admin-content/images/16x8.png"/>
+        <iframe src="<?php echo $url; ?>" frameborder="0" allowfullscreen></iframe>
+    </div>
+ 
